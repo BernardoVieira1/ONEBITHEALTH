@@ -15,13 +15,14 @@ export default function Form(){
 
   const [height, setHeight] = useState(null);
   const [weight, setWeight ] = useState(null);
-  const [messageImc, setMessageImc] = useState("Preencha o pedo e a altura");
+  const [messageImc, setMessageImc] = useState("Preencha o peso e altura");
   const [imc, setImc] = useState(null);
   const [textButton, setTextButton ] = useState("Calcular");
   const [errorMessage, setErrorMessage] = useState(null);
 
   function calcularImc(){
-    return setImc((weight/(height*height)).toFixed(2));
+    let heightFromat = height.replace(",",".")
+    return setImc((weight/(heightFromat*heightFromat)).toFixed(2));
   }
 
   function verificationImc(){
@@ -50,8 +51,9 @@ export default function Form(){
   }
 
   return(
-    <Pressable onPress={Keyboard.dismiss} style={styles.formContext}>
-      <View style={styles.form}>
+      <View style={styles.formContext}>
+        {imc == null ?
+        <Pressable onPress={Keyboard.dismiss} style={styles.form}>
         <Text style={styles.formLabel}>Altura</Text>
         <Text style={styles.erroMessage}>{errorMessage}</Text>
         <TextInput 
@@ -74,9 +76,19 @@ export default function Form(){
           style={styles.buttonCalculator}
           onPress={()=> validationImc()}
           title={textButton}
-        ><Text style={styles.textButtonCalculator}>{textButton}</Text></TouchableOpacity>
-      </View>
-      <ResultImc messageResultImc={messageImc} resultImc={imc}/>
-    </Pressable>
+        ><Text style={styles.textButtonCalculator}>{textButton}</Text>
+        </TouchableOpacity>
+      </Pressable>
+        :
+        <View style={styles.exibResultImc}>
+          <ResultImc messageResultImc={messageImc} resultImc={imc}/>
+          <TouchableOpacity
+            style={styles.buttonCalculator}
+           onPress={()=> validationImc()}
+           title={textButton}
+          ><Text style={styles.textButtonCalculator}>{textButton}</Text></TouchableOpacity>
+        </View>
+      }
+    </View>
   )
 }
